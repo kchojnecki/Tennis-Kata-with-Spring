@@ -1,4 +1,4 @@
-package com.kata.tennis;
+package com.kata.tennis.app.game;
 
 public class TennisGame1 implements TennisGame {
     
