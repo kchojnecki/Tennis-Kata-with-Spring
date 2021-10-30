@@ -6,7 +6,7 @@ class TennisGameTest extends Specification {
 
     def "should check all scores"() {
         given:
-        TennisGame1 game = new TennisGame1("player1", "player2");
+        TennisGame game = new TennisGame("player1", "player2");
 
         expect:
         checkAllScores(game, player1Score, player2Score, result);
