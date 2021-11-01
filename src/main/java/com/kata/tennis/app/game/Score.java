@@ -1,31 +1,27 @@
 package com.kata.tennis.app.game;
 
 class Score {
-    private final int player1;
-    private final int player2;
+    private final Player player;
+    private final Points points;
 
-    private Score(int player1, int player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+    private Score(Player player, Points points) {
+        this.player = player;
+        this.points = points;
     }
 
-    static Score initial() {
-        return new Score(0, 0);
+    public static Score initial(Player player) {
+        return new Score(player, new Points(0));
     }
 
-    Score addPointForPlayer1() {
-        return new Score(player1 + 1, player2);
+    Score addPoint() {
+        return new Score(player, points.add(new Points(1)));
     }
 
-    Score addPointForPlayer2() {
-        return new Score(player1, player2 + 1);
+    Player player() {
+        return player;
     }
 
-    int player1Score() {
-        return player1;
-    }
-
-    int player2Score() {
-        return player2;
+    Points points() {
+        return points;
     }
 }

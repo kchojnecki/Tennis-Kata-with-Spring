@@ -4,12 +4,74 @@ import spock.lang.Specification
 
 class TennisGameTest extends Specification {
 
+    def "won game can be finished"() {
+        given:
+        def game = new TennisGame(player1(), player2())
+
+        and:
+        setGameResult(game, 4, 0)
+
+        when:
+        def result = game.finishGame()
+
+        then:
+        result.get().reason() == "Game finished."
+    }
+
+    def "only won game can be finished"() {
+        given:
+        def game = new TennisGame(player1(), player2())
+
+        and:
+        setGameResult(game, 3, 0)
+
+        when:
+        def result = game.finishGame()
+
+        then:
+        result.getLeft().reason() == "Game in progress."
+    }
+    
+    def "cannot finish already finished game"() {
+        given:
+        def game = new TennisGame(player1(), player2())
+
+        and:
+        setGameResult(game, 4, 0)
+
+        and: "game is finished"
+        game.finishGame()
+
+        when:
+        def result = game.finishGame()
+
+        then:
+        result.getLeft().reason() == "Game is already finished."
+    }
+
+    def "cannot add points when a game is finished"() {
+        given:
+        def game = new TennisGame(player1(), player2())
+
+        and:
+        setGameResult(game, 4, 0)
+
+        and:
+        game.finishGame()
+
+        when:
+        def result = game.wonPoint(player1())
+
+        then:
+        result.getLeft().reason() == "Game is already finished."
+    }
+    
     def "should check all scores"() {
         given:
-        TennisGame game = new TennisGame(new Player("player1"), new Player("player2"))
+        def game = new TennisGame(player1(), player2())
 
         expect:
-        checkAllScores(game, player1Score, player2Score, result)
+        checkScore(game, player1Score, player2Score, result)
 
         where:
         player1Score | player2Score | result
@@ -53,16 +115,26 @@ class TennisGameTest extends Specification {
         14           | 16           | "Win for player2"
     }
 
+    private static void checkScore(TennisGame game, int player1Score, int player2Score, String expectedScore) {
+        setGameResult(game, player1Score, player2Score)
+        assert expectedScore == game.getScore()
+    }
 
-    private static void checkAllScores(TennisGame game, int player1Score, int player2Score, String expectedScore) {
+    private static void setGameResult(TennisGame game, int player1Score, int player2Score) {
         int highestScore = Math.max(player1Score, player2Score)
         for (int i = 0; i < highestScore; i++) {
             if (i < player1Score)
-                game.wonPoint(new Player("player1"))
+                game.wonPoint(player1())
             if (i < player2Score)
-                game.wonPoint(new Player("player2"))
+                game.wonPoint(player2())
         }
-        expectedScore == game.getScore()
     }
 
+    private static Player player1() {
+        new Player("player1")
+    }
+
+    private static Player player2() {
+        new Player("player2")
+    }
 }
