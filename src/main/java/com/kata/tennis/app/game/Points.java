@@ -3,7 +3,7 @@ package com.kata.tennis.app.game;
 record Points(int value) {
     Points {
         if (value < 0) {
-            throw new RuntimeException("Point cannot be negative.");
+            throw new RuntimeException("Points cannot be negative.");
         }
     }
 

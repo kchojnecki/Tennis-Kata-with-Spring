@@ -9,13 +9,18 @@ class TennisGameTest extends Specification {
         def game = new TennisGame(player1(), player2())
 
         and:
-        setGameResult(game, 4, 0)
+        setGameResult(game, p1Score, p2Score)
 
         when:
         def result = game.finishGame()
 
         then:
         result.get().reason() == "Game finished."
+
+        where:
+        p1Score | p2Score
+        4       | 0
+        0       | 4
     }
 
     def "only won game can be finished"() {
@@ -23,15 +28,22 @@ class TennisGameTest extends Specification {
         def game = new TennisGame(player1(), player2())
 
         and:
-        setGameResult(game, 3, 0)
+        setGameResult(game, p1Score, p2Score)
 
         when:
         def result = game.finishGame()
 
         then:
         result.getLeft().reason() == "Game in progress."
+
+        where:
+        p1Score | p2Score
+        3       | 0
+        0       | 3
+        4       | 3
+        3       | 4
     }
-    
+
     def "cannot finish already finished game"() {
         given:
         def game = new TennisGame(player1(), player2())
@@ -65,7 +77,18 @@ class TennisGameTest extends Specification {
         then:
         result.getLeft().reason() == "Game is already finished."
     }
-    
+
+    def "should throw exception when unknown player score a point"() {
+        given:
+        def game = new TennisGame(player1(), player2())
+
+        when:
+        def result = game.wonPoint(new Player("unknown"))
+
+        then:
+        result.getLeft().reason() == "Player unknown is not in the game."
+    }
+
     def "should check all scores"() {
         given:
         def game = new TennisGame(player1(), player2())
@@ -114,6 +137,7 @@ class TennisGameTest extends Specification {
         16           | 14           | "Win for player1"
         14           | 16           | "Win for player2"
     }
+
 
     private static void checkScore(TennisGame game, int player1Score, int player2Score, String expectedScore) {
         setGameResult(game, player1Score, player2Score)
