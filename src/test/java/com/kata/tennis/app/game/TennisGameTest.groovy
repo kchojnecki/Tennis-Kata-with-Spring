@@ -6,10 +6,10 @@ class TennisGameTest extends Specification {
 
     def "should check all scores"() {
         given:
-        TennisGame game = new TennisGame("player1", "player2");
+        TennisGame game = new TennisGame(new Player("player1"), new Player("player2"))
 
         expect:
-        checkAllScores(game, player1Score, player2Score, result);
+        checkAllScores(game, player1Score, player2Score, result)
 
         where:
         player1Score | player2Score | result
@@ -55,12 +55,12 @@ class TennisGameTest extends Specification {
 
 
     private static void checkAllScores(TennisGame game, int player1Score, int player2Score, String expectedScore) {
-        int highestScore = Math.max(player1Score, player2Score);
+        int highestScore = Math.max(player1Score, player2Score)
         for (int i = 0; i < highestScore; i++) {
             if (i < player1Score)
-                game.wonPoint("player1");
+                game.wonPoint(new Player("player1"))
             if (i < player2Score)
-                game.wonPoint("player2");
+                game.wonPoint(new Player("player2"))
         }
         expectedScore == game.getScore()
     }
