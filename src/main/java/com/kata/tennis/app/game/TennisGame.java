@@ -31,6 +31,14 @@ public class TennisGame {
         return playerNotFound(player);
     }
 
+    private Either<Failure, Success> pointWonBy(Player player) {
+        return Either.right(new Success(format("Player %s won a point.", player.name())));
+    }
+
+    private Either<Failure, Success> playerNotFound(Player player) {
+        return Either.left(new Failure(format("Player %s is not in the game.", player.name())));
+    }
+
     public Either<Failure, Success> finishGame() {
         if (isGameFinished) {
             return Either.left(new Failure("Game is already finished."));
@@ -58,13 +66,6 @@ public class TennisGame {
         return p1.points().greaterOrEqual(p2.points().add(twoPoints));
     }
 
-    private Either<Failure, Success> pointWonBy(Player player) {
-        return Either.right(new Success(format("Player %s won a point.", player.name())));
-    }
-
-    private Either<Failure, Success> playerNotFound(Player player) {
-        return Either.left(new Failure(format("Player %s is not in the game.", player.name())));
-    }
 
     public String getScore() {
         return new ScoreResultMapper().map(playerOneScore.points().value(), playerTwoScore.points().value());
