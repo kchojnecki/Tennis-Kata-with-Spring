@@ -1,7 +1,7 @@
 package com.kata.tennis.app.game;
 
-import com.kata.tennis.app.shared.Failure;
-import com.kata.tennis.app.shared.Success;
+import com.kata.tennis.app.shared.result.Failure;
+import com.kata.tennis.app.shared.result.Success;
 import io.vavr.control.Either;
 
 import static java.lang.String.format;
