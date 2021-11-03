@@ -1,6 +1,6 @@
-package com.kata.tennis.app.game;
+package com.kata.tennis.app.game.domain;
 
-public class ScoreResultMapper {
+class ScoreResultMapper {
 
     String map(int player1Score, int player2Score) {
         String result = "";

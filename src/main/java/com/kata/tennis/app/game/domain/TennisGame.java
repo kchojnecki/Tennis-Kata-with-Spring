@@ -1,19 +1,40 @@
-package com.kata.tennis.app.game;
+package com.kata.tennis.app.game.domain;
 
 import com.kata.tennis.app.shared.result.Failure;
 import com.kata.tennis.app.shared.result.Success;
 import io.vavr.control.Either;
 
+import java.util.UUID;
+
 import static java.lang.String.format;
 
 public class TennisGame {
+    private final UUID gameId;
     private Score playerOneScore;
     private Score playerTwoScore;
     private boolean isGameFinished;
 
-    public TennisGame(Player player1, Player player2) {
-        this.playerOneScore = Score.initial(player1);
-        this.playerTwoScore = Score.initial(player2);
+    private TennisGame(UUID gameId, Score playerOneScore, Score playerTwoScore, boolean isGameFinished) {
+        this.gameId = gameId;
+        this.playerOneScore = playerOneScore;
+        this.playerTwoScore = playerTwoScore;
+        this.isGameFinished = isGameFinished;
+    }
+
+    public static TennisGame newGame(Player player1, Player player2) {
+        return new TennisGame(UUID.randomUUID(), Score.initial(player1), Score.initial(player2), false);
+    }
+
+    public static TennisGame fromSnapshot(Snapshot snapshot) {
+        var gameId = snapshot.gameId();
+        var playerOneScore = new Score(new Player(snapshot.playerOneName), new Points(snapshot.playerOneScore));
+        var playerTwoScore = new Score(new Player(snapshot.playerTwoName), new Points(snapshot.playerTwoScore));
+        var isGameFinished = snapshot.isGameFinished;
+        return new TennisGame(gameId, playerOneScore, playerTwoScore, isGameFinished);
+    }
+
+    UUID id() {
+        return gameId;
     }
 
     public Either<Failure, Success> wonPoint(Player player) {
@@ -66,8 +87,28 @@ public class TennisGame {
         return p1.points().greaterOrEqual(p2.points().add(twoPoints));
     }
 
-
     public String getScore() {
         return new ScoreResultMapper().map(playerOneScore.points().value(), playerTwoScore.points().value());
+    }
+
+    public Snapshot toSnapshot() {
+        return new Snapshot(
+                gameId,
+                playerOneScore.player().name(),
+                playerOneScore.points().value(),
+                playerTwoScore.player().name(),
+                playerTwoScore.points().value(),
+                isGameFinished
+        );
+    }
+
+    public static record Snapshot(
+            UUID gameId,
+            String playerOneName,
+            int playerOneScore,
+            String playerTwoName,
+            int playerTwoScore,
+            boolean isGameFinished
+    ) {
     }
 }

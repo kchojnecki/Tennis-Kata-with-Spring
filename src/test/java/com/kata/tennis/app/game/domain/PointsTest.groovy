@@ -1,5 +1,6 @@
-package com.kata.tennis.app.game
+package com.kata.tennis.app.game.domain
 
+import com.kata.tennis.app.game.domain.Points
 import spock.lang.Specification
 
 class PointsTest extends Specification {

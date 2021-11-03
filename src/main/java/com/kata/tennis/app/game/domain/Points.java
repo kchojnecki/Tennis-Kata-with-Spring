@@ -1,4 +1,4 @@
-package com.kata.tennis.app.game;
+package com.kata.tennis.app.game.domain;
 
 record Points(int value) {
     Points {

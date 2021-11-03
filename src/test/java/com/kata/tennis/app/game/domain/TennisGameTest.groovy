@@ -1,12 +1,14 @@
-package com.kata.tennis.app.game
+package com.kata.tennis.app.game.domain
 
+import com.kata.tennis.app.game.domain.Player
+import com.kata.tennis.app.game.domain.TennisGame
 import spock.lang.Specification
 
 class TennisGameTest extends Specification {
 
     def "won game can be finished"() {
         given:
-        def game = new TennisGame(player1(), player2())
+        def game = TennisGame.newGame(player1(), player2())
 
         and:
         setGameResult(game, p1Score, p2Score)
@@ -25,7 +27,7 @@ class TennisGameTest extends Specification {
 
     def "only won game can be finished"() {
         given:
-        def game = new TennisGame(player1(), player2())
+        def game = TennisGame.newGame(player1(), player2())
 
         and:
         setGameResult(game, p1Score, p2Score)
@@ -46,7 +48,7 @@ class TennisGameTest extends Specification {
 
     def "cannot finish already finished game"() {
         given:
-        def game = new TennisGame(player1(), player2())
+        def game = TennisGame.newGame(player1(), player2())
 
         and:
         setGameResult(game, 4, 0)
@@ -63,7 +65,7 @@ class TennisGameTest extends Specification {
 
     def "cannot add points when a game is finished"() {
         given:
-        def game = new TennisGame(player1(), player2())
+        def game = TennisGame.newGame(player1(), player2())
 
         and:
         setGameResult(game, 4, 0)
@@ -80,7 +82,7 @@ class TennisGameTest extends Specification {
 
     def "should throw exception when unknown player score a point"() {
         given:
-        def game = new TennisGame(player1(), player2())
+        def game = TennisGame.newGame(player1(), player2())
 
         when:
         def result = game.wonPoint(new Player("unknown"))
@@ -91,7 +93,7 @@ class TennisGameTest extends Specification {
 
     def "should check all scores"() {
         given:
-        def game = new TennisGame(player1(), player2())
+        def game = TennisGame.newGame(player1(), player2())
 
         expect:
         checkScore(game, player1Score, player2Score, result)
