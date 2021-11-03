@@ -2,23 +2,44 @@ package com.kata.tennis.app.game.infra;
 
 import com.kata.tennis.app.game.domain.TennisGame;
 import com.kata.tennis.app.game.domain.port.TennisGameGateway;
+import com.kata.tennis.app.game.tempdb.InMemoryGameDb;
+import com.kata.tennis.app.game.tempdb.TennisGameDbModel;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 class TennisGameInMemoryGateway implements TennisGameGateway {
-    private final Map<UUID, TennisGame.Snapshot> data = new ConcurrentHashMap<>();
+    private final InMemoryGameDb inMemoryGameDb;
+
+    TennisGameInMemoryGateway(InMemoryGameDb inMemoryGameDb) {
+        this.inMemoryGameDb = inMemoryGameDb;
+    }
 
     @Override
     public void create(TennisGame tennisGame) {
         var snapshot = tennisGame.toSnapshot();
-        data.put(snapshot.gameId(), snapshot);
+        var dbModel = new TennisGameDbModel(snapshot.gameId(),
+                snapshot.playerOneName(), snapshot.playerOneScore(),
+                snapshot.playerTwoName(), snapshot.playerTwoScore(),
+                snapshot.isGameFinished()
+        );
+        inMemoryGameDb.create(dbModel);
     }
 
     @Override
     public Optional<TennisGame> fetchById(UUID gameId) {
-        return Optional.ofNullable(data.get(gameId)).map(TennisGame::fromSnapshot);
+        return inMemoryGameDb.fetchById(gameId)
+                .map(this::toSnapshot)
+                .map(TennisGame::fromSnapshot);
+    }
+
+    private TennisGame.Snapshot toSnapshot(TennisGameDbModel tennisGameDbModel) {
+        return new TennisGame.Snapshot(
+                tennisGameDbModel.gameId(),
+                tennisGameDbModel.playerOneName(),
+                tennisGameDbModel.playerOneScore(),
+                tennisGameDbModel.playerTwoName(),
+                tennisGameDbModel.playerTwoScore(),
+                tennisGameDbModel.isGameFinished());
     }
 }

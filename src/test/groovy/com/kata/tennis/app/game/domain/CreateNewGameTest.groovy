@@ -5,7 +5,7 @@ import spock.lang.Specification
 
 class CreateNewGameTest extends Specification {
 
-    def gameGateway = new InMemoryTennisGameTestRepository()
+    def gameGateway = new InMemoryTennisGameTestGateway()
     def createNewGame = new CreateNewGame(gameGateway)
 
     def "should create new game"() {
@@ -23,6 +23,7 @@ class CreateNewGameTest extends Specification {
             it.playerOneScore() == 0
             it.playerTwoName() == "p2"
             it.playerTwoScore() == 0
+            !it.isGameFinished()
         })
     }
 }

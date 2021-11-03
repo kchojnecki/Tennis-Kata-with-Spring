@@ -87,10 +87,6 @@ public class TennisGame {
         return p1.points().greaterOrEqual(p2.points().add(twoPoints));
     }
 
-    public String getScore() {
-        return new ScoreResultMapper().map(playerOneScore.points().value(), playerTwoScore.points().value());
-    }
-
     public Snapshot toSnapshot() {
         return new Snapshot(
                 gameId,

@@ -1,4 +1,4 @@
-package com.kata.tennis.app.game.domain;
+package com.kata.tennis.app.game.readmodel;
 
 class ScoreResultMapper {
 

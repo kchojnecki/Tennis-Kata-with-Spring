@@ -2,10 +2,8 @@ package com.kata.tennis.app.game.domain
 
 import com.kata.tennis.app.game.domain.port.TennisGameGateway
 
-import java.util.concurrent.ConcurrentHashMap
-
-class InMemoryTennisGameTestRepository implements TennisGameGateway {
-    Map<UUID, TennisGame.Snapshot> db = new ConcurrentHashMap()
+class InMemoryTennisGameTestGateway implements TennisGameGateway {
+    private final Map<UUID, TennisGame.Snapshot> db = new HashMap<>()
 
     @Override
     void create(TennisGame tennisGame) {
