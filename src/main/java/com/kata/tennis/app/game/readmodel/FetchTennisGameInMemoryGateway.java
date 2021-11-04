@@ -16,7 +16,8 @@ class FetchTennisGameInMemoryGateway implements FetchTennisGameGateway {
 
     @Override
     public Either<Failure, TennisGame> fetchById(UUID id) {
-        return inMemoryGameDb.fetchById(id).map(this::toTennisGame)
+        return inMemoryGameDb.fetchById(id)
+                .map(this::toTennisGame)
                 .<Either<Failure, TennisGame>>map(Either::right)
                 .orElse(Either.left(new Failure(String.format("Game[%s] doesn't exists", id))));
     }

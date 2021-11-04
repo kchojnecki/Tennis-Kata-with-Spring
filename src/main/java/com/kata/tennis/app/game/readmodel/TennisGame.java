@@ -18,7 +18,7 @@ class TennisGame {
     }
 
     private String gameStatus(boolean isGameFinished) {
-        return isGameFinished? "FINISHED" : "IN PROGRESS";
+        return isGameFinished ? "FINISHED" : "IN PROGRESS";
     }
 
     public UUID getGameId() {
